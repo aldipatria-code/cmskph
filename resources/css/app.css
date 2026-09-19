@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --color-brand-primary: #1a56db;
+    --font-display: "Inter", sans-serif;
+}
+
+/* Mempercantik tampilan typography isi berita */
+.prose {
+    @apply text-gray-800 leading-relaxed;
+}
+
+.prose h2 {
+    @apply text-2xl font-bold mt-8 mb-4;
+}
+
+.prose p {
+    @apply mb-6;
+}
