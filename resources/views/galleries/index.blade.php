@@ -8,12 +8,13 @@
 <div x-data="{ open: false, image: '', title: '', category: '', date: '' }"
      @open-gallery.window="image = $event.detail.image; title = $event.detail.title; category = $event.detail.category; date = $event.detail.date; open = true"
      @keydown.escape.window="open = false">
-<section class="relative mb-10 overflow-hidden rounded-[2rem] px-6 py-10 text-white shadow-xl shadow-teal-900/15 sm:px-12 sm:py-14"
+<section class="relative mb-10 overflow-hidden rounded-[2rem] px-6 py-10 text-white shadow-[0_30px_70px_-40px_rgba(15,118,110,0.45)] sm:px-12 sm:py-14"
          style="background: {{ $siteSettings->galleryHeroBackgroundColor() }};">
     <div class="pointer-events-none absolute -right-16 -top-20 h-72 w-72 rounded-full bg-white/15 blur-3xl"></div>
+    <div class="pointer-events-none absolute -bottom-20 left-12 h-52 w-52 rounded-full bg-white/10 blur-3xl"></div>
     <div class="relative grid items-center gap-8 lg:grid-cols-[1fr_0.8fr]">
         <div>
-            <span class="inline-flex rounded-full bg-white/15 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-teal-50">{{ $siteSettings->galleryHeroBadge() }}</span>
+            <span class="inline-flex rounded-full bg-white/15 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-teal-50 ring-1 ring-white/20">{{ $siteSettings->galleryHeroBadge() }}</span>
             <h1 class="mt-5 max-w-xl text-4xl font-black leading-tight sm:text-6xl">{{ $siteSettings->galleryHeroTitle() }}</h1>
             <p class="mt-4 max-w-2xl text-sm leading-7 text-teal-50 sm:text-base">{{ $siteSettings->galleryHeroDescription() }}</p>
             <div class="mt-6 flex flex-wrap gap-3 text-sm">
@@ -46,23 +47,23 @@
     </div>
 </section>
 
-<form method="GET" action="{{ route('galleries.index') }}" class="mb-7 rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
+<form method="GET" action="{{ route('galleries.index') }}" class="mb-7 rounded-[2rem] border border-slate-200 bg-white p-4 shadow-[0_25px_50px_-35px_rgba(15,23,42,0.2)] sm:p-5">
     <div class="flex flex-col gap-3 lg:flex-row">
         <label class="relative flex-1">
             <span class="sr-only">Cari galeri berdasarkan foto, judul, atau kategori</span>
             <span class="pointer-events-none absolute inset-y-0 left-4 flex items-center text-slate-400">⌕</span>
-            <input type="search" name="search" value="{{ $search }}" placeholder="Cari foto, judul, atau kategori..." class="w-full rounded-2xl border border-slate-200 py-3 pl-11 pr-4 text-sm text-slate-700 outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-teal-100">
+            <input type="search" name="search" value="{{ $search }}" placeholder="Cari foto, judul, atau kategori..." class="w-full rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm text-slate-700 outline-none transition focus:border-teal-500 focus:bg-white focus:ring-2 focus:ring-teal-100">
         </label>
         <label class="lg:w-56">
             <span class="sr-only">Pilih kategori galeri</span>
-            <select name="category" class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-teal-100">
+            <select name="category" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-teal-500 focus:bg-white focus:ring-2 focus:ring-teal-100">
                 <option value="">Semua kategori</option>
                 @foreach ($categories as $category)
                     <option value="{{ $category }}" @selected($selectedCategory === $category)>{{ $category }}</option>
                 @endforeach
             </select>
         </label>
-        <button type="submit" class="rounded-2xl bg-teal-700 px-6 py-3 text-sm font-bold text-white transition hover:bg-teal-800">Cari</button>
+        <button type="submit" class="rounded-2xl bg-teal-700 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-teal-700/20 transition hover:bg-teal-800">Cari</button>
         @if ($search !== '' || filled($selectedCategory))
             <a href="{{ route('galleries.index') }}" class="rounded-2xl border border-slate-200 px-6 py-3 text-center text-sm font-bold text-slate-600 transition hover:bg-slate-50">Reset</a>
         @endif
@@ -76,19 +77,21 @@
     @endforeach
 </nav>
 
-<div class="mb-7 flex flex-wrap items-end justify-between gap-4">
-    <div>
-        <p class="text-sm font-bold uppercase tracking-[0.16em] text-teal-700">Dokumentasi</p>
-        <h2 class="mt-2 text-2xl font-black text-slate-900 sm:text-3xl">Kegiatan KPH</h2>
+<div class="mb-7 rounded-[2rem] border border-teal-100 bg-gradient-to-r from-teal-50 via-cyan-50 to-sky-50 p-5 shadow-[0_25px_60px_-35px_rgba(13,148,136,0.25)] sm:p-7">
+    <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div class="max-w-4xl">
+            <p class="text-sm font-black uppercase tracking-[0.18em] text-teal-700">{{ $siteSettings->gallerySectionBadge() }}</p>
+            <h2 class="mt-3 text-2xl font-black tracking-tight text-slate-900 sm:text-4xl">{{ $siteSettings->gallerySectionTitle() }}</h2>
+        </div>
+        <a href="{{ route('community-members.create') }}" class="inline-flex items-center justify-center rounded-full bg-teal-600 px-6 py-3 text-sm font-black text-white shadow-lg shadow-teal-600/20 transition hover:bg-teal-700">{{ $siteSettings->galleryCtaButtonLabel() }}</a>
     </div>
-    <p class="text-sm text-slate-500">{{ $galleries->total() }} dokumentasi kegiatan</p>
 </div>
 
 @if ($galleries->isNotEmpty())
     <div class="grid auto-rows-[12rem] grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
         @foreach ($galleries as $gallery)
             <a href="{{ route('galleries.show', $gallery) }}"
-               class="group relative block overflow-hidden rounded-3xl bg-slate-900 shadow-sm {{ $loop->first ? 'sm:col-span-2 sm:row-span-2' : '' }}"
+               class="group relative block overflow-hidden rounded-[1.75rem] bg-slate-900 shadow-[0_25px_50px_-30px_rgba(15,23,42,0.3)] transition duration-300 hover:-translate-y-1 {{ $loop->first ? 'sm:col-span-2 sm:row-span-2' : '' }}"
                aria-label="Lihat detail {{ $gallery->title }}">
                 <img src="{{ $gallery->imageUrl() }}" alt="{{ $gallery->title }}" class="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105">
                 <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/10 to-transparent"></div>
@@ -138,6 +141,8 @@
         <p class="mt-2 text-sm text-slate-400">Dokumentasi kegiatan komunitas akan tampil di sini.</p>
     </div>
 @endif
+
+</div>
 </div>
 
 <div x-cloak x-show="open" x-transition.opacity

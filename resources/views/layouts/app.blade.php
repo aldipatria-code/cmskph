@@ -15,12 +15,15 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { overflow-x: hidden; }
+    </style>
 
     @stack('seo')
 </head>
 <body class="bg-slate-50 font-[Inter] antialiased text-slate-900">
 
-    <nav class="sticky top-0 z-50 border-b border-teal-100/80 bg-white/90 shadow-sm backdrop-blur-xl">
+    <nav class="sticky top-0 z-50 border-b border-teal-100/80 bg-white/90 shadow-[0_10px_30px_-20px_rgba(15,118,110,0.3)] backdrop-blur-xl">
         <div class="mx-auto flex min-h-20 max-w-7xl flex-wrap items-center justify-between gap-x-4 gap-y-3 px-4 py-4 sm:flex-nowrap sm:px-6 lg:px-8">
             <a href="/" class="group flex min-w-0 shrink items-center gap-3">
                 @if ($siteSettings->logoUrl($siteSettings->logo_path))
@@ -28,7 +31,7 @@
                          alt="{{ $siteSettings->site_name }}"
                          class="block max-h-10 w-auto max-w-40 object-contain sm:max-h-12 sm:max-w-52">
                 @else
-                    <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-teal-600 text-lg font-black text-white shadow-lg shadow-teal-600/20">
+                    <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-600 to-cyan-600 text-lg font-black text-white shadow-lg shadow-teal-600/20">
                         {{ mb_strtoupper(mb_substr($siteSettings->site_name, 0, 1)) }}
                     </span>
                     <span class="truncate text-lg font-extrabold tracking-tight text-slate-900 transition group-hover:text-teal-600 sm:text-xl">
@@ -37,7 +40,7 @@
                 @endif
             </a>
             <div class="order-3 w-full overflow-x-auto sm:order-2 sm:w-auto">
-                <div class="mx-auto flex w-max items-center gap-1 rounded-full border border-slate-200 bg-white/80 p-1 shadow-sm">
+                <div class="mx-auto flex w-max items-center gap-1 rounded-full border border-slate-200 bg-white/80 p-1 shadow-sm ring-1 ring-slate-100">
                 <a href="/" class="rounded-full bg-teal-50 px-4 py-2 text-xs font-bold text-teal-700 transition hover:bg-teal-100 sm:text-sm">
                     Beranda
                 </a>

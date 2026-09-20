@@ -11,6 +11,7 @@ use App\Models\Post;
 use App\Models\SiteSetting;
 use App\Models\Tag;
 use App\Models\User;
+use App\Models\YoutubeVideo;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -271,6 +272,7 @@ class DatabaseSeeder extends Seeder
         $this->seedGalleryCategories();
         $this->seedBranding();
         $this->seedFaqs();
+        $this->seedYoutubeVideos();
 
         $this->command?->info('Data dummy berhasil dibuat. Password seluruh akun: password');
     }
@@ -423,6 +425,33 @@ class DatabaseSeeder extends Seeder
             Faq::updateOrCreate(
                 ['question' => $faq['question']],
                 $faq + ['is_published' => true],
+            );
+        }
+    }
+
+    private function seedYoutubeVideos(): void
+    {
+        $videos = [
+            [
+                'title' => 'Edukasi dan dukungan kesehatan untuk komunitas',
+                'description' => 'Video edukasi untuk membuka diskusi tentang pentingnya informasi kesehatan yang mudah dipahami dan dapat dipercaya.',
+                'category' => 'Kesehatan',
+                'youtube_url' => 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+                'sort_order' => 1,
+            ],
+            [
+                'title' => 'Berbagi informasi bersama komunitas',
+                'description' => 'Dokumentasi video tentang pentingnya berbagi pengetahuan dan membangun dukungan di lingkungan komunitas.',
+                'category' => 'Komunitas',
+                'youtube_url' => 'https://www.youtube.com/watch?v=9bZkp7q19f0',
+                'sort_order' => 2,
+            ],
+        ];
+
+        foreach ($videos as $video) {
+            YoutubeVideo::updateOrCreate(
+                ['youtube_url' => $video['youtube_url']],
+                $video + ['is_published' => true],
             );
         }
     }

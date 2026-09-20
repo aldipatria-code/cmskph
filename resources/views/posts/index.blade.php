@@ -5,13 +5,51 @@
 @section('content')
 <style>
     @keyframes gallery-marquee {
-        from { transform: translateX(0); }
-        to { transform: translateX(-50%); }
+        from { transform: translate3d(0, 0, 0); }
+        to { transform: translate3d(-50%, 0, 0); }
+    }
+
+    .kph-surface {
+        background: linear-gradient(135deg, rgba(240, 253, 250, 0.96), rgba(255, 255, 255, 1));
+    }
+
+    .kph-card {
+        transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+
+    .kph-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 22px 38px -24px rgba(15, 118, 110, 0.28);
+    }
+
+    .gallery-marquee {
+        position: relative;
+        background: linear-gradient(135deg, rgba(248, 250, 252, 0.95), rgba(255, 255, 255, 1));
     }
 
     .gallery-marquee-track {
-        animation: gallery-marquee 32s linear infinite;
+        display: flex;
         width: max-content;
+        min-width: 100%;
+        animation: gallery-marquee 28s linear infinite;
+        will-change: transform;
+    }
+
+    .gallery-marquee-group {
+        display: flex;
+        flex-shrink: 0;
+        align-items: stretch;
+        gap: 0;
+    }
+
+    .gallery-marquee-label {
+        background: linear-gradient(135deg, #0f766e 0%, #134e4a 100%);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,.16);
+    }
+
+    .gallery-marquee-card {
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(8px);
     }
 
     .gallery-marquee:hover .gallery-marquee-track,
@@ -34,13 +72,13 @@
                 }
             }
          }"
-         class="relative mb-10 overflow-hidden rounded-[2rem] border border-teal-100 px-6 py-8 shadow-xl shadow-teal-900/10 sm:mb-14 sm:px-10 sm:py-10 lg:px-12"
+         class="kph-surface relative mb-10 overflow-hidden rounded-[2rem] border border-teal-100 px-6 py-8 shadow-[0_30px_70px_-40px_rgba(15,118,110,0.35)] sm:mb-14 sm:px-10 sm:py-10 lg:px-12"
          style="background-color: color-mix(in srgb, {{ $siteSettings->heroBackgroundColor() }} 12%, white);">
     <div class="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-teal-300/20 blur-3xl"></div>
     <div class="pointer-events-none absolute -bottom-32 left-1/3 h-72 w-72 rounded-full bg-cyan-300/20 blur-3xl"></div>
     <div class="relative grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8">
         <div class="max-w-2xl">
-        <span class="inline-flex items-center gap-2 rounded-full bg-teal-100 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-teal-800">
+        <span class="inline-flex items-center gap-2 rounded-full bg-teal-100 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-teal-800 shadow-sm ring-1 ring-teal-200/70">
             <span class="h-2 w-2 rounded-full bg-teal-500"></span>
             {{ $siteSettings->heroBadge() }}
         </span>
@@ -49,15 +87,15 @@
             {{ $siteSettings->heroDescription() }}
         </p>
         <div class="mt-7 flex flex-wrap gap-3">
-        <a href="{{ route('community-members.create') }}" class="inline-flex items-center rounded-full bg-teal-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-teal-600/20 transition hover:-translate-y-0.5 hover:bg-teal-700">
+        <a href="{{ route('community-members.create') }}" class="inline-flex items-center rounded-full bg-teal-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-teal-600/20 transition duration-200 hover:-translate-y-0.5 hover:bg-teal-700 hover:shadow-teal-600/30">
             Gabung komunitas
             <span class="ml-2">→</span>
         </a>
-        <a href="#informasi" class="inline-flex items-center rounded-full bg-white/80 px-5 py-3 text-sm font-bold text-teal-700 ring-1 ring-teal-100 transition hover:bg-white">
+        <a href="#informasi" class="inline-flex items-center rounded-full bg-white/80 px-5 py-3 text-sm font-bold text-teal-700 ring-1 ring-teal-100 transition duration-200 hover:bg-white hover:ring-teal-200">
             Lihat informasi
         </a>
         </div>
-        <div class="mt-7 inline-flex items-center gap-3 rounded-2xl bg-white/80 px-4 py-3 ring-1 ring-teal-100">
+        <div class="mt-7 inline-flex items-center gap-3 rounded-2xl bg-white/80 px-4 py-3 ring-1 ring-teal-100 shadow-sm backdrop-blur-sm">
             <span class="flex h-9 w-9 items-center justify-center rounded-full bg-teal-100 text-teal-700">✓</span>
             <span><strong class="block text-sm text-slate-800">Edukasi dan dukungan</strong><small class="text-xs text-slate-500">Informasi terpercaya untuk keluarga dan penyintas</small></span>
         </div>
@@ -105,35 +143,59 @@
 </section>
 
 @if ($homeGalleries->isNotEmpty())
-    <section class="gallery-marquee mb-10 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm" aria-labelledby="galeri-kami-title">
-        <div class="gallery-marquee-track flex items-stretch">
-            <a id="galeri-kami-title" href="{{ route('galleries.index') }}" class="flex min-w-36 shrink-0 items-center bg-slate-900 px-6 py-6 text-lg font-black text-white transition hover:bg-teal-800 sm:min-w-40 sm:px-7">
-                Galeri Kami
-            </a>
-            @foreach ($homeGalleries as $gallery)
-                <a href="{{ route('galleries.show', $gallery) }}" class="group flex min-w-[17rem] shrink-0 items-center gap-4 border-l border-slate-100 px-5 py-4 transition hover:bg-teal-50 sm:min-w-[21rem]">
-                    <img src="{{ $gallery->imageUrl() }}" alt="{{ $gallery->title }}" class="h-12 w-12 shrink-0 rounded-xl object-cover ring-1 ring-slate-200 sm:h-14 sm:w-14">
-                    <div class="min-w-0">
-                        <span class="inline-flex rounded-full bg-sky-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-sky-700">{{ $gallery->category }}</span>
-                        <h2 class="mt-2 truncate text-sm font-semibold text-slate-700 transition group-hover:text-teal-700">{{ $gallery->title }}</h2>
-                    </div>
+    <section class="gallery-marquee mb-10 overflow-hidden rounded-[2rem] border border-slate-200 shadow-lg shadow-slate-900/5" aria-label="Galeri Kami">
+        <div class="gallery-marquee-track">
+            <div class="gallery-marquee-group">
+                <a id="galeri-kami-title" href="{{ route('galleries.index') }}" class="gallery-marquee-label flex min-w-36 shrink-0 items-center gap-2 px-5 py-5 text-base font-black tracking-tight text-white transition hover:brightness-110 sm:min-w-40 sm:px-7 sm:text-lg">
+                    <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/15 text-sm">✦</span>
+                    Galeri Kami
                 </a>
-            @endforeach
-            <a href="{{ route('galleries.index') }}" aria-hidden="true" tabindex="-1" class="flex min-w-36 shrink-0 items-center bg-slate-900 px-6 py-6 text-lg font-black text-white sm:min-w-40 sm:px-7">
-                Galeri Kami
-            </a>
-            @foreach ($homeGalleries as $gallery)
-                <a href="{{ route('galleries.show', $gallery) }}" aria-hidden="true" tabindex="-1" class="group flex min-w-[17rem] shrink-0 items-center gap-4 border-l border-slate-100 px-5 py-4 sm:min-w-[21rem]">
-                    <img src="{{ $gallery->imageUrl() }}" alt="" class="h-12 w-12 shrink-0 rounded-xl object-cover ring-1 ring-slate-200 sm:h-14 sm:w-14">
-                    <div class="min-w-0">
-                        <span class="inline-flex rounded-full bg-sky-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-sky-700">{{ $gallery->category }}</span>
-                        <h2 class="mt-2 truncate text-sm font-semibold text-slate-700">{{ $gallery->title }}</h2>
-                    </div>
+                @foreach ($homeGalleries as $gallery)
+                    <a href="{{ route('galleries.show', $gallery) }}" class="gallery-marquee-card group flex min-w-[17rem] shrink-0 items-center gap-4 border-l border-slate-100 px-5 py-4 transition duration-300 hover:-translate-y-0.5 hover:bg-teal-50/80 sm:min-w-[21rem]">
+                        <img src="{{ $gallery->imageUrl() }}" alt="{{ $gallery->title }}" class="h-12 w-12 shrink-0 rounded-xl object-cover ring-1 ring-slate-200 shadow-sm sm:h-14 sm:w-14">
+                        <div class="min-w-0">
+                            <span class="inline-flex rounded-full bg-sky-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-sky-700">{{ $gallery->category }}</span>
+                            <h2 class="mt-2 truncate text-sm font-semibold text-slate-700 transition group-hover:text-teal-700">{{ $gallery->title }}</h2>
+                        </div>
+                    </a>
+                @endforeach
+            </div>
+            <div class="gallery-marquee-group" aria-hidden="true">
+                <a href="{{ route('galleries.index') }}" tabindex="-1" class="gallery-marquee-label flex min-w-36 shrink-0 items-center gap-2 px-5 py-5 text-base font-black tracking-tight text-white sm:min-w-40 sm:px-7 sm:text-lg">
+                    <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/15 text-sm">✦</span>
+                    Galeri Kami
                 </a>
-            @endforeach
+                @foreach ($homeGalleries as $gallery)
+                    <div class="gallery-marquee-card group flex min-w-[17rem] shrink-0 items-center gap-4 border-l border-slate-100 px-5 py-4 sm:min-w-[21rem]">
+                        <img src="{{ $gallery->imageUrl() }}" alt="" class="h-12 w-12 shrink-0 rounded-xl object-cover ring-1 ring-slate-200 shadow-sm sm:h-14 sm:w-14">
+                        <div class="min-w-0">
+                            <span class="inline-flex rounded-full bg-sky-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-sky-700">{{ $gallery->category }}</span>
+                            <h2 class="mt-2 truncate text-sm font-semibold text-slate-700">{{ $gallery->title }}</h2>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
         </div>
     </section>
 @endif
+
+<section class="mb-10 grid gap-4 md:grid-cols-3">
+    <div class="kph-card rounded-[2rem] border border-teal-100 bg-gradient-to-br from-teal-600 to-teal-700 p-6 text-white shadow-[0_25px_50px_-30px_rgba(13,148,136,0.7)]">
+        <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/15 text-xl">✦</div>
+        <p class="text-3xl font-black">1.5K+</p>
+        <p class="mt-2 text-sm text-teal-50/90">Anggota komunitas aktif yang terhubung dalam dukungan dan edukasi.</p>
+    </div>
+    <div class="kph-card rounded-[2rem] border border-sky-100 bg-white p-6 shadow-[0_25px_50px_-35px_rgba(14,165,233,0.4)]">
+        <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-100 text-xl text-sky-700">✓</div>
+        <p class="text-3xl font-black text-slate-900">35+</p>
+        <p class="mt-2 text-sm leading-6 text-slate-600">Program edukasi dan kegiatan komunitas yang terus berkembang setiap bulan.</p>
+    </div>
+    <div class="kph-card rounded-[2rem] border border-amber-100 bg-gradient-to-br from-amber-50 to-white p-6 shadow-[0_25px_50px_-35px_rgba(245,158,11,0.4)]">
+        <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-100 text-xl text-amber-700">◎</div>
+        <p class="text-3xl font-black text-slate-900">24/7</p>
+        <p class="mt-2 text-sm leading-6 text-slate-600">Informasi, bantuan, dan ruang diskusi untuk keluarga serta penyintas hepatitis.</p>
+    </div>
+</section>
 
 <div id="informasi" class="mb-7 flex scroll-mt-28 flex-wrap items-end justify-between gap-4 sm:mb-9">
     <div>
@@ -143,16 +205,16 @@
     <p class="max-w-xs text-right text-sm leading-6 text-slate-500">{{ $siteSettings->postsSectionDescription() }}</p>
 </div>
 
-<form method="GET" action="{{ route('home') }}" class="mb-8 rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
+<form method="GET" action="{{ route('home') }}" class="kph-card mb-8 rounded-[2rem] border border-slate-200 bg-white p-4 shadow-[0_20px_45px_-32px_rgba(15,23,42,0.18)] sm:p-5">
     <div class="flex flex-col gap-3 xl:flex-row">
         <label class="relative flex-1">
             <span class="sr-only">Cari berita berdasarkan judul atau isi</span>
             <span class="pointer-events-none absolute inset-y-0 left-4 flex items-center text-slate-400">⌕</span>
-            <input type="search" name="post_search" value="{{ $postSearch }}" placeholder="Cari berita, judul, atau isi..." class="w-full rounded-2xl border border-slate-200 py-3 pl-11 pr-4 text-sm text-slate-700 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
+            <input type="search" name="post_search" value="{{ $postSearch }}" placeholder="Cari berita, judul, atau isi..." class="w-full rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm text-slate-700 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100">
         </label>
         <label class="xl:w-56">
             <span class="sr-only">Pilih kategori berita</span>
-            <select name="post_category" class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
+            <select name="post_category" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100">
                 <option value="">Categories</option>
                 @foreach ($postCategories as $category)
                     <option value="{{ $category->slug }}" @selected($postCategory === $category->slug)>{{ $category->name }}</option>
@@ -161,14 +223,14 @@
         </label>
         <label class="xl:w-56">
             <span class="sr-only">Pilih tag berita</span>
-            <select name="post_tag" class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
+            <select name="post_tag" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100">
                 <option value=""># Tags</option>
                 @foreach ($postTags as $tag)
                     <option value="{{ $tag->slug }}" @selected($postTag === $tag->slug)># {{ $tag->name }}</option>
                 @endforeach
             </select>
         </label>
-        <button type="submit" class="rounded-2xl bg-blue-700 px-6 py-3 text-sm font-bold text-white transition hover:bg-blue-800">Cari</button>
+        <button type="submit" class="rounded-2xl bg-blue-700 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-blue-700/20 transition hover:bg-blue-800">Cari</button>
         @if ($postSearch !== '' || filled($postCategory) || filled($postTag))
             <a href="{{ route('home') }}" class="rounded-2xl border border-slate-200 px-6 py-3 text-center text-sm font-bold text-slate-600 transition hover:bg-slate-50">Reset</a>
         @endif
@@ -177,7 +239,7 @@
 
 @if ($featuredPost || $archivePosts->isNotEmpty())
     @if ($featuredPost)
-    <article class="group relative mb-6 grid overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-lg shadow-slate-900/5 transition duration-300 hover:border-blue-100 hover:shadow-xl hover:shadow-blue-900/10 lg:grid-cols-2">
+    <article class="kph-card group relative mb-6 grid overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-[0_25px_60px_-30px_rgba(30,64,175,0.24)] transition duration-300 hover:border-blue-100 hover:shadow-xl hover:shadow-blue-900/10 lg:grid-cols-2">
         <div class="relative min-h-64 overflow-hidden lg:min-h-96">
             <img src="{{ $featuredPost->cover_image ? Storage::disk('public')->url($featuredPost->cover_image) : 'https://placehold.co/900x600?text=No+Image' }}"
                  alt="{{ $featuredPost->title }}"
@@ -289,6 +351,19 @@
         <p class="mt-2 text-sm text-slate-400">Silakan kembali lagi untuk membaca kabar terbaru komunitas.</p>
     </div>
 @endif
+
+<div class="mt-12 rounded-[2rem] border border-teal-100 bg-gradient-to-r from-teal-600 via-teal-700 to-cyan-700 p-6 text-white shadow-[0_25px_60px_-35px_rgba(13,148,136,0.8)] sm:p-8">
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+            <p class="text-sm font-bold uppercase tracking-[0.16em] text-teal-50/80">Bergabung bersama kami</p>
+            <h2 class="mt-2 text-2xl font-black">Ikuti komunitas, dapatkan informasi, dan dukung perjuangan kesehatan bersama.</h2>
+        </div>
+        <div class="flex flex-wrap gap-3">
+            <a href="{{ route('community-members.create') }}" class="rounded-full bg-white px-5 py-3 text-sm font-bold text-teal-700 transition hover:bg-teal-50">Gabung komunitas</a>
+            <a href="{{ route('galleries.index') }}" class="rounded-full border border-white/30 px-5 py-3 text-sm font-bold text-white transition hover:bg-white/10">Lihat galeri</a>
+        </div>
+    </div>
+</div>
 
 @if ($youtubeVideos->isNotEmpty() || $videoSearch !== '' || filled($videoCategory))
     <section class="mt-14 rounded-[2rem] border border-teal-100 bg-teal-50/60 px-5 py-8 sm:px-8 sm:py-10">

@@ -58,16 +58,27 @@ class SiteSettings extends Page
             'gallery_hero_badge' => $settings->galleryHeroBadge(),
             'gallery_hero_title' => $settings->galleryHeroTitle(),
             'gallery_hero_description' => $settings->galleryHeroDescription(),
+            'gallery_section_badge' => $settings->gallerySectionBadge(),
+            'gallery_section_title' => $settings->gallerySectionTitle(),
+            'gallery_cta_button_label' => $settings->galleryCtaButtonLabel(),
             'gallery_hero_background_color' => $settings->galleryHeroBackgroundColor(),
             'faq_hero_badge' => $settings->faqHeroBadge(),
             'faq_hero_title' => $settings->faqHeroTitle(),
             'faq_hero_description' => $settings->faqHeroDescription(),
+            'faq_cta_badge' => $settings->faqCtaBadge(),
+            'faq_cta_title' => $settings->faqCtaTitle(),
+            'faq_cta_button_label' => $settings->faqCtaButtonLabel(),
             'featured_post_id' => $settings->featuredPostId(),
             'hero_background_color' => $settings->heroBackgroundColor(),
             'hero_background_image' => $settings->hero_background_image,
             'hero_slides' => $settings->hero_slides ?? [],
             'about_title' => $settings->about_title ?: $settings->aboutTitle(),
             'about_description' => $settings->about_description ?: $settings->aboutDescription(),
+            'about_vision' => $settings->about_vision ?: $settings->aboutVision(),
+            'about_mission' => $settings->about_mission ?: $settings->aboutMission(),
+            'about_commitment' => $settings->about_commitment ?: $settings->aboutCommitment(),
+            'about_cta_badge' => $settings->about_cta_badge ?: $settings->aboutCtaBadge(),
+            'about_cta_title' => $settings->about_cta_title ?: $settings->aboutCtaTitle(),
             'about_background_color' => $settings->aboutBackgroundColor(),
             'about_background_image' => $settings->about_background_image,
             'help_widget_enabled' => $settings->helpWidgetEnabled(),
@@ -208,6 +219,43 @@ class SiteSettings extends Page
                             ->placeholder('Tuliskan profil, tujuan, dan peran komunitas Anda.')
                             ->helperText('Gunakan paragraf sederhana untuk menjelaskan komunitas kepada pengunjung.')
                             ->columnSpanFull(),
+                        Textarea::make('about_vision')
+                            ->label('Visi')
+                            ->required()
+                            ->rows(3)
+                            ->maxLength(1000)
+                            ->placeholder('Mewujudkan masyarakat yang lebih sehat, sadar, dan peduli terhadap isu hepatitis.')
+                            ->columnSpan(1),
+                        Textarea::make('about_mission')
+                            ->label('Misi')
+                            ->required()
+                            ->rows(3)
+                            ->maxLength(1000)
+                            ->placeholder('Memberikan edukasi, dukungan, dan ruang kolaborasi yang inklusif untuk semua.')
+                            ->columnSpan(1),
+                        Textarea::make('about_commitment')
+                            ->label('Komitmen')
+                            ->required()
+                            ->rows(3)
+                            ->maxLength(1000)
+                            ->placeholder('Bergerak bersama komunitas untuk mencegah stigma, meningkatkan pemahaman, dan menyebarkan informasi yang benar.')
+                            ->columnSpanFull(),
+                        TextInput::make('about_cta_badge')
+                            ->label('Label CTA Tentang Kami')
+                            ->required()
+                            ->maxLength(100)
+                            ->placeholder('Mulai dari sini')
+                            ->columnSpan(1),
+                        TextInput::make('about_cta_title')
+                            ->label('Judul CTA Tentang Kami')
+                            ->required()
+                            ->maxLength(255)
+                            ->placeholder('Mari bersama menjaga kesehatan dan edukasi masyarakat.')
+                            ->columnSpan(1),
+                    ])
+                    ->columns([
+                        'default' => 1,
+                        'md' => 2,
                     ]),
                 Section::make('Hero Galeri Kegiatan')
                     ->id('hero-galeri')
@@ -229,6 +277,24 @@ class SiteSettings extends Page
                             ->rows(3)
                             ->maxLength(1000)
                             ->columnSpanFull(),
+                        TextInput::make('gallery_section_badge')
+                            ->label('Label banner galeri')
+                            ->required()
+                            ->maxLength(100)
+                            ->placeholder('Jelajahi lebih banyak')
+                            ->columnSpan(1),
+                        TextInput::make('gallery_section_title')
+                            ->label('Judul banner galeri')
+                            ->required()
+                            ->maxLength(255)
+                            ->placeholder('Lihat kegiatan komunitas dan momen yang sudah kami dokumentasikan.')
+                            ->columnSpan(1),
+                        TextInput::make('gallery_cta_button_label')
+                            ->label('Teks tombol CTA')
+                            ->required()
+                            ->maxLength(100)
+                            ->placeholder('Gabung komunitas')
+                            ->columnSpan(1),
                         ColorPicker::make('gallery_hero_background_color')
                             ->label('Warna background galeri')
                             ->required()
@@ -257,6 +323,24 @@ class SiteSettings extends Page
                             ->required()
                             ->rows(3)
                             ->maxLength(1000)
+                            ->columnSpanFull(),
+                        TextInput::make('faq_cta_badge')
+                            ->label('Label CTA FAQ')
+                            ->required()
+                            ->maxLength(100)
+                            ->placeholder('Masih punya pertanyaan?')
+                            ->columnSpan(1),
+                        TextInput::make('faq_cta_title')
+                            ->label('Judul CTA FAQ')
+                            ->required()
+                            ->maxLength(255)
+                            ->placeholder('Bergabunglah bersama komunitas untuk mendapat jawaban yang lebih personal.')
+                            ->columnSpan(1),
+                        TextInput::make('faq_cta_button_label')
+                            ->label('Teks tombol CTA FAQ')
+                            ->required()
+                            ->maxLength(100)
+                            ->placeholder('Gabung komunitas')
                             ->columnSpanFull(),
                     ])
                     ->columns([

@@ -11,12 +11,12 @@
             <span aria-hidden="true">←</span>
             Kembali ke galeri
         </a>
-        <span class="rounded-full bg-teal-50 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-teal-700">
+        <span class="rounded-full bg-teal-50 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-teal-700 ring-1 ring-teal-100">
             {{ $gallery->category }}
         </span>
     </div>
 
-    <div class="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-xl shadow-slate-900/5">
+    <div class="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-[0_30px_70px_-35px_rgba(15,23,42,0.2)]">
         <div class="relative bg-slate-950">
             <img :src="images[active]" alt="{{ $gallery->title }}" class="mx-auto max-h-[70vh] w-full object-contain">
             <template x-if="images.length > 1">
@@ -40,7 +40,7 @@
                     <h1 class="mt-3 text-3xl font-black tracking-tight text-slate-900 sm:text-5xl">{{ $gallery->title }}</h1>
                 </div>
                 @if ($gallery->event_date)
-                    <time datetime="{{ $gallery->event_date->toDateString() }}" class="rounded-xl bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-600">
+                    <time datetime="{{ $gallery->event_date->toDateString() }}" class="rounded-xl bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-600 ring-1 ring-slate-200">
                         {{ $gallery->event_date->isoFormat('D MMMM Y') }}
                     </time>
                 @endif

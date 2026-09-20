@@ -23,10 +23,16 @@ class SiteSetting extends Model
         'gallery_hero_badge',
         'gallery_hero_title',
         'gallery_hero_description',
+        'gallery_section_badge',
+        'gallery_section_title',
+        'gallery_cta_button_label',
         'gallery_hero_background_color',
         'faq_hero_badge',
         'faq_hero_title',
         'faq_hero_description',
+        'faq_cta_badge',
+        'faq_cta_title',
+        'faq_cta_button_label',
         'gallery_hero_image_one',
         'gallery_hero_image_two',
         'featured_post_id',
@@ -35,6 +41,11 @@ class SiteSetting extends Model
         'hero_slides',
         'about_title',
         'about_description',
+        'about_vision',
+        'about_mission',
+        'about_commitment',
+        'about_cta_badge',
+        'about_cta_title',
         'about_background_color',
         'about_background_image',
         'help_widget_enabled',
@@ -100,6 +111,21 @@ class SiteSetting extends Model
         return $this->gallery_hero_description ?: 'Lihat dokumentasi edukasi, kampanye, dan kegiatan Komunitas Peduli Hepatitis.';
     }
 
+    public function gallerySectionBadge(): string
+    {
+        return $this->gallery_section_badge ?: 'Jelajahi lebih banyak';
+    }
+
+    public function gallerySectionTitle(): string
+    {
+        return $this->gallery_section_title ?: 'Lihat kegiatan komunitas dan momen yang sudah kami dokumentasikan.';
+    }
+
+    public function galleryCtaButtonLabel(): string
+    {
+        return $this->gallery_cta_button_label ?: 'Gabung komunitas';
+    }
+
     public function galleryHeroBackgroundColor(): string
     {
         return $this->gallery_hero_background_color ?: '#0f9aa3';
@@ -118,6 +144,21 @@ class SiteSetting extends Model
     public function faqHeroDescription(): string
     {
         return $this->faq_hero_description ?: 'Temukan jawaban atas pertanyaan umum seputar Komunitas Peduli Hepatitis, edukasi, dan kegiatan komunitas.';
+    }
+
+    public function faqCtaBadge(): string
+    {
+        return $this->faq_cta_badge ?: 'Masih punya pertanyaan?';
+    }
+
+    public function faqCtaTitle(): string
+    {
+        return $this->faq_cta_title ?: 'Bergabunglah bersama komunitas untuk mendapat jawaban yang lebih personal.';
+    }
+
+    public function faqCtaButtonLabel(): string
+    {
+        return $this->faq_cta_button_label ?: 'Gabung komunitas';
     }
 
     public function galleryHeroImageOneUrl(): ?string
@@ -168,6 +209,31 @@ class SiteSetting extends Model
         return $this->about_description ?: 'Komunitas Peduli Hepatitis (KPH) adalah ruang edukasi, dukungan, dan berbagi pengalaman untuk meningkatkan kesadaran tentang hepatitis.';
     }
 
+    public function aboutVision(): string
+    {
+        return $this->about_vision ?: 'Mewujudkan masyarakat yang lebih sehat, sadar, dan peduli terhadap isu hepatitis.';
+    }
+
+    public function aboutMission(): string
+    {
+        return $this->about_mission ?: 'Memberikan edukasi, dukungan, dan ruang kolaborasi yang inklusif untuk semua.';
+    }
+
+    public function aboutCommitment(): string
+    {
+        return $this->about_commitment ?: 'Bergerak bersama komunitas untuk mencegah stigma, meningkatkan pemahaman, dan menyebarkan informasi yang benar.';
+    }
+
+    public function aboutCtaBadge(): string
+    {
+        return $this->about_cta_badge ?: 'Mulai dari sini';
+    }
+
+    public function aboutCtaTitle(): string
+    {
+        return $this->about_cta_title ?: 'Mari bersama menjaga kesehatan dan edukasi masyarakat.';
+    }
+
     public function aboutBackgroundColor(): string
     {
         return $this->about_background_color ?: '#f0fdfa';
@@ -185,37 +251,55 @@ class SiteSetting extends Model
 
     public static function current(): self
     {
-        return Cache::rememberForever('site-settings', function (): self {
-            $settings = self::query()
-                ->orderByRaw('CASE WHEN logo_path IS NOT NULL OR login_logo_path IS NOT NULL THEN 0 ELSE 1 END')
-                ->orderBy('id')
-                ->first();
+        $settings = self::query()
+            ->orderByDesc('id')
+            ->first();
 
-            return $settings ?: self::create([
-                'site_name' => 'Komunitas Peduli Hepatitis (KPH)',
-                'footer_text' => '© {year} {site_name}. Bersama meningkatkan kesadaran dan kepedulian terhadap hepatitis.',
-                'hero_badge' => 'Komunitas kesehatan',
-                'hero_title' => 'Bersama peduli hepatitis.',
-                'hero_description' => 'Temukan edukasi terpercaya, cerita penyintas, dan kegiatan komunitas untuk meningkatkan kesadaran serta dukungan bagi orang yang terdampak hepatitis.',
-                'posts_section_label' => 'Informasi terbaru',
-                'posts_section_title' => 'Edukasi dan cerita komunitas',
-                'posts_section_description' => 'Ruang berbagi pengetahuan, pengalaman, dan dukungan seputar hepatitis.',
-                'about_title' => 'Tentang Komunitas Peduli Hepatitis',
-                'about_description' => 'Komunitas Peduli Hepatitis (KPH) adalah ruang edukasi, dukungan, dan berbagi pengalaman untuk meningkatkan kesadaran tentang hepatitis.',
-                'help_widget_enabled' => true,
-                'help_widget_badge' => 'Komunitas Peduli Hepatitis',
-                'help_widget_title' => 'Konsultasi Komunitas',
-                'help_widget_description' => 'Tim kami siap membantu pertanyaan Anda seputar hepatitis.',
-                'help_widget_whatsapp' => '',
-                'help_widget_email' => '',
-                'help_widget_faq_url' => '',
-            ]);
-        });
+        if ($settings) {
+            return $settings;
+        }
+
+        return self::create([
+            'site_name' => 'Komunitas Peduli Hepatitis (KPH)',
+            'footer_text' => '© {year} {site_name}. Bersama meningkatkan kesadaran dan kepedulian terhadap hepatitis.',
+            'hero_badge' => 'Komunitas kesehatan',
+            'hero_title' => 'Bersama peduli hepatitis.',
+            'hero_description' => 'Temukan edukasi terpercaya, cerita penyintas, dan kegiatan komunitas untuk meningkatkan kesadaran serta dukungan bagi orang yang terdampak hepatitis.',
+            'posts_section_label' => 'Informasi terbaru',
+            'posts_section_title' => 'Edukasi dan cerita komunitas',
+            'posts_section_description' => 'Ruang berbagi pengetahuan, pengalaman, dan dukungan seputar hepatitis.',
+            'gallery_hero_badge' => 'Galeri Kegiatan',
+            'gallery_hero_title' => 'Cerita kegiatan komunitas.',
+            'gallery_hero_description' => 'Lihat dokumentasi edukasi, kampanye, dan kegiatan Komunitas Peduli Hepatitis.',
+            'gallery_section_badge' => 'Jelajahi lebih banyak',
+            'gallery_section_title' => 'Lihat kegiatan komunitas dan momen yang sudah kami dokumentasikan.',
+            'gallery_cta_button_label' => 'Gabung komunitas',
+            'faq_hero_badge' => 'FAQ',
+            'faq_hero_title' => 'Pertanyaan yang sering diajukan',
+            'faq_hero_description' => 'Temukan jawaban atas pertanyaan umum seputar Komunitas Peduli Hepatitis, edukasi, dan kegiatan komunitas.',
+            'faq_cta_badge' => 'Masih punya pertanyaan?',
+            'faq_cta_title' => 'Bergabunglah bersama komunitas untuk mendapat jawaban yang lebih personal.',
+            'faq_cta_button_label' => 'Gabung komunitas',
+            'about_title' => 'Tentang Komunitas Peduli Hepatitis',
+            'about_description' => 'Komunitas Peduli Hepatitis (KPH) adalah ruang edukasi, dukungan, dan berbagi pengalaman untuk meningkatkan kesadaran tentang hepatitis.',
+            'about_vision' => 'Mewujudkan masyarakat yang lebih sehat, sadar, dan peduli terhadap isu hepatitis.',
+            'about_mission' => 'Memberikan edukasi, dukungan, dan ruang kolaborasi yang inklusif untuk semua.',
+            'about_commitment' => 'Bergerak bersama komunitas untuk mencegah stigma, meningkatkan pemahaman, dan menyebarkan informasi yang benar.',
+            'about_cta_badge' => 'Mulai dari sini',
+            'about_cta_title' => 'Mari bersama menjaga kesehatan dan edukasi masyarakat.',
+            'help_widget_enabled' => true,
+            'help_widget_badge' => 'Komunitas Peduli Hepatitis',
+            'help_widget_title' => 'Konsultasi Komunitas',
+            'help_widget_description' => 'Tim kami siap membantu pertanyaan Anda seputar hepatitis.',
+            'help_widget_whatsapp' => '',
+            'help_widget_email' => '',
+            'help_widget_faq_url' => '',
+        ]);
     }
 
     public static function updateBranding(array $attributes): self
     {
-        $settings = self::current();
+        $settings = self::query()->latest('id')->firstOrFail();
         $settings->update($attributes);
         Cache::forget('site-settings');
 

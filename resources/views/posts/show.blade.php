@@ -59,7 +59,7 @@
         
         <div class="mt-8 flex flex-wrap items-center justify-center md:justify-start gap-4 border-b border-gray-100 pb-8">
             <div class="flex items-center gap-3">
-                <div class="h-10 w-10 flex-shrink-0 rounded-full bg-blue-600 flex items-center justify-center font-bold text-white uppercase shadow-md">
+                <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-cyan-500 font-bold uppercase text-white shadow-md">
                     {{ substr($post->author->name, 0, 1) }}
                 </div>
                 <div>
@@ -73,7 +73,7 @@
         </div>
     </header>
 
-    <figure class="mb-8 overflow-hidden rounded-2xl shadow-2xl sm:mb-12 sm:rounded-3xl">
+    <figure class="mb-8 overflow-hidden rounded-[2rem] shadow-[0_30px_70px_-35px_rgba(15,23,42,0.35)] sm:mb-12">
         <img src="{{ $post->cover_image ? Storage::disk('public')->url($post->cover_image) : 'https://placehold.co/1200x700?text=No+Image' }}"
              alt="{{ $post->title }}" 
              class="max-h-[500px] w-full object-cover">
@@ -90,7 +90,7 @@
 
     <div class="mt-12 flex flex-wrap gap-2 border-t border-gray-100 pt-8">
         @foreach($post->tags as $tag)
-            <a href="/tags/{{ $tag->slug }}" class="rounded-full bg-gray-100 px-4 py-1.5 text-xs font-semibold text-gray-600 hover:bg-blue-600 hover:text-white transition">
+            <a href="/tags/{{ $tag->slug }}" class="rounded-full bg-gray-100 px-4 py-1.5 text-xs font-semibold text-gray-600 transition hover:bg-blue-600 hover:text-white">
                 #{{ $tag->name }}
             </a>
         @endforeach
